@@ -1,0 +1,157 @@
+#include<iostream>
+#include<conio.h>
+
+using namespace std;
+
+int matran[1001][1001];
+int mang[10000];
+int start = -1;
+int End = -1;
+
+void push(int a)
+{
+	start++;
+	mang[start] = a;
+}
+
+// start với end đặt tên ảo diệu thế , cái ở cuối thì đặt start , cái ở đầu thì đặt end "3
+// suy nghĩ đi , điểm start kia là điểm chạy đúng ko nó sẽ là điểm cuối của mảng , điểm end kia là xóa mới lên nó là đầu của mảng phải ko, vang thi ke no
+// tối nghĩa :3, nai sap khoc r doi
+int pop()
+{
+	End++;
+	return mang[End];
+}
+
+// ko lam nốt cái này ak, :((
+bool empty()
+{
+	if (start <= End)
+	{
+		return true;
+	}
+	return false;
+}
+
+// hiểu sao mỗi test phải gọi lại cái này ko, da hieu
+void initMT(int N, int M){
+	for (int i = 0; i < N; i++)
+	{
+		for (int j = 0; j < M; j++)
+		{
+			matran[i][j] = -1;// thế chỗ này để làm gì :3, ak e vua k thay cho nay , , đấy thế mà bảo đọc rồi >< ua doc r e cung nh gan bang -1 r co ma vua luot lai k thay , dốt day la k nhin thay k pai dot
+		}
+	}
+}
+
+int convertMTToInt(int row, int col, int M){
+	int so = row*M + col;
+	return so;
+}
+
+int getCol(int so, int M){
+	int col = so % M;
+	return col;
+}
+
+int getRow(int so, int M){
+	int row = so / M;
+	return row;
+}
+
+int main()
+{
+	freopen("input.txt", "r", stdin);
+	int T;
+	cin >> T;
+	int N, M, R, C, S, K;
+	for (int tc = 1; tc <= 5; tc++)
+	{
+		cin >> N >> M;
+		cin >> R >> C >> S >> K;
+		R--;
+		C--;
+		S--;
+		K--;
+		initMT(N, M);
+		matran[R][C] = 0;
+		matran[S][K] = -1002;
+
+		int a = convertMTToInt(R, C, M);
+		push(a);
+		int dich = convertMTToInt(S, K, M);
+		while (!empty()){
+			int top = pop();
+			int topCol = getCol(top, M);
+			int topRow = getRow(top, M);
+			if (topRow - 2 >= 0 && topCol - 1 >= 0 && (matran[topRow - 2][topCol - 1] == -1 || matran[topRow - 2][topCol - 1] == -1002)){
+				int a1 = convertMTToInt(topRow - 2, topCol - 1, M);
+				matran[topRow - 2][topCol - 1] = matran[topRow][topCol] + 1;
+				push(a1);
+				if (a1 == dich){
+					break;
+				}
+			}
+			if (topRow - 1 >= 0 && topCol - 2 >= 0 && (matran[topRow - 1][topCol - 2] == -1 || matran[topRow - 1][topCol - 2] == -1002)){
+				int a2 = convertMTToInt(topRow - 1, topCol - 2, M);
+				push(a2);
+				matran[topRow - 1][topCol - 2] = matran[topRow][topCol] + 1;
+				if (a2 == dich){
+					break;
+				}
+			}
+			if (topRow - 2 >= 0 && topCol + 1 < M && (matran[topRow - 2][topCol + 1] == -1 || matran[topRow - 2][topCol + 1] == -1002)){
+				int a3 = convertMTToInt(topRow - 2, topCol + 1, M);
+				push(a3);
+				matran[topRow - 2][topCol + 1] = matran[topRow][topCol] + 1;
+				if (a3 == dich){
+					break;
+				}
+			}
+			if (topRow - 1 >= 0 && topCol + 2 < M && (matran[topRow - 1][topCol + 2] == -1 || matran[topRow - 1][topCol + 2] == -1002)){
+				int a4 = convertMTToInt(topRow - 1, topCol + 2, M);
+				push(a4);
+				matran[topRow - 1][topCol + 2] = matran[topRow][topCol] + 1;
+				if (a4 == dich){
+					break;
+				}
+			}
+			if (topRow + 1 < N && topCol - 2 >= 0 && (matran[topRow + 1][topCol - 2] == -1 || matran[topRow + 1][topCol - 2] == -1002)){
+				int a5 = convertMTToInt(topRow + 1, topCol - 2, M);
+				push(a5);
+				matran[topRow + 1][topCol - 2] = matran[topRow][topCol] + 1;
+				if (a5 == dich){
+					break;
+				}
+			}
+			if (topRow + 2 < N && topCol - 1 >= 0 && (matran[topRow + 2][topCol - 1] == -1 || matran[topRow + 2][topCol - 1] == -1002)){
+				int a6 = convertMTToInt(topRow + 2, topCol - 1, M);
+				push(a6);
+				matran[topRow + 2][topCol - 1] = matran[topRow][topCol] + 1;
+				if (a6 == dich){
+					break;
+				}
+			}
+			if (topRow + 1 < N && topCol + 2 < M && (matran[topRow + 1][topCol + 2] == -1 || matran[topRow + 1][topCol + 2] == -1002)){
+				int a7 = convertMTToInt(topRow + 1, topCol + 2, M);
+				push(a7);
+				matran[topRow + 1][topCol + 2] = matran[topRow][topCol] + 1;
+				if (a7 == dich){
+					break;
+				}
+			}
+			if (topRow + 2 < N && topCol + 1 < M && (matran[topRow + 2][topCol + 1] == -1 || matran[topRow + 2][topCol + 1] == -1002)){
+				int a8 = convertMTToInt(topRow + 2, topCol + 1, M);
+				push(a8);
+				matran[topRow + 2][topCol + 1] = matran[topRow][topCol] + 1;
+
+
+				if (a8 == dich){
+					break;
+				}
+			}
+		}
+		cout << "Case #" << tc << " " << matran[S][K] << endl;
+	}
+	_getch();
+}
